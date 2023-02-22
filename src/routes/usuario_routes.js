@@ -1,9 +1,19 @@
 const express = require("express");
+const { verifyJWT, autenticate, logout, storeWorkout } = require("../controllers/usuariosController");
 const usuariosController = require("../controllers/usuariosController");
 
 const router = express.Router();
 
-router.route("/").get(usuariosController.all).post(usuariosController.create)
+
+// Rota de teste
+router.route("/teste").get(verifyJWT, usuariosController.all)
+// Login
+router.route("/auth").get(autenticate)
+// Logout
+router.route("/logout").get(logout)
+// Registro de treino
+// router.route('/store/workout').post(verifyJWT, storeWorkout)
+// .post(usuariosController.create)
 // router.route("/:id").get(usuariosController.one).put(usuariosController.update).delete(usuariosController.delete)
 
 module.exports = router;
