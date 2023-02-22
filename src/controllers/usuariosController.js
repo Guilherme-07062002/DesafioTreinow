@@ -1,5 +1,5 @@
 const Usuarios = require("../models/usuarios");
-// const registroTreino = require("../models/registroTreino")
+const registroTreino = require("../models/registroTreino")
 
 const jwt = require("jsonwebtoken");
 const SECRET = 'secret'
@@ -26,7 +26,7 @@ module.exports = {
                 return response.status(401).json("Falha na autenticação.");
             } else {
                 if (request.body.email == usuarios.email && request.body.senha == usuarios.senha) {
-                    const token = jwt.sign({ userId: 1 }, SECRET, { expiresIn: 300 })
+                    const token = jwt.sign({ userId: usuarios.id }, SECRET, { expiresIn: 300 })
                     return response.json({ auth: true, token })
                 }
             }
@@ -52,16 +52,37 @@ module.exports = {
         console.log('Usuário fez logout.')
         blacklist.push(request.headers['x-access-token'])
         response.end()
+    },
+    async storeWorkout(request, response) {
+        try {
+            const token = request.headers['x-access-token']
+            const decoded = jwt.verify(token, SECRET);
+            const id_usuario = decoded.userId
+            // console.log(decoded); // Exibe as informações do usuário (claims) contidas no token
+            //return response.json(decoded.userId)
+            try {
+                await registroTreino.create(id_usuario);
+                response.status(200).json("Treino registrado.");
+            } catch (error) {
+                console.log(error);
+                response.status(400).send(error);
+            }
+
+        } catch (err) {
+            response.status(400).send(error)
+        }
     }
-    // async storeWorkout(request, response) {
-    //     try {
-    //         await registroTreino.create(request.body);
-    //         response.status(200).json("Treino registrado.");
-    //     } catch (error) {
-    //         console.log(error);
-    //         response.status(400).send(error);
-    //     }
-    // }
+    , async showtreino(request, response) {
+        try {
+            console.log('Acesso autorizado')
+            const usuarios = await registroTreino.findAll();
+            response.status(200).json(usuarios);
+        } catch (error) {
+            console.log(error);
+            response.status(400).send(error);
+        }
+    }
+
 
     // ,
     // async create(request, response) {
