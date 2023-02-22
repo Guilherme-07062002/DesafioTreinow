@@ -18,16 +18,16 @@ registroTreino.init(
             type: DataTypes.INTEGER,
             references: {
                 model: 'usuarios',
-                key: 'id'
-            }
-        }
+                key: 'id',
+                onDelete: 'CASCADE'
+            },
+            allowNull: false
+        },
     },
     {
         sequelize,
         modelName: "registroTreino",
-        timestamps: false,
-        // timezone: '-03:00' O banco de dados sqlite não permite a alteração do fuso horário padrão, logo ao inserir o horário do treino ele não estará configurado devidamente como o fuso horário de Brasilia.
-        
+        timestamps: false
     }
 );
 

@@ -1,5 +1,6 @@
 const Usuarios = require("../models/usuarios");
 const registroTreino = require("../models/registroTreino")
+const sequelize = require("../config/database");
 
 const jwt = require("jsonwebtoken");
 const SECRET = 'secret'
@@ -58,21 +59,43 @@ module.exports = {
             const token = request.headers['x-access-token']
             const decoded = jwt.verify(token, SECRET);
             const id_usuario = decoded.userId
-            // console.log(decoded); // Exibe as informações do usuário (claims) contidas no token
-            //return response.json(decoded.userId)
             try {
-                await registroTreino.create(id_usuario);
+                await registroTreino.create({id_usuario: id_usuario});
                 response.status(200).json("Treino registrado.");
             } catch (error) {
                 console.log(error);
                 response.status(400).send(error);
             }
 
-        } catch (err) {
+        } catch (error) {
             response.status(400).send(error)
         }
     }
-    , async showtreino(request, response) {
+    ,
+    async deleteAccount(request, response) {
+        const token = request.headers['x-access-token']
+        const decoded = jwt.verify(token, SECRET);
+        const user_id = decoded.userId
+        try {
+            await registroTreino.destroy({
+                where: {
+                    id_usuario: user_id
+                }
+            })
+            Usuarios.destroy({
+                where: {
+                    id: user_id
+                }
+            })
+            
+            response.status(200).json('Usuário deletado.')
+        } catch (error) {
+            console.log(error);
+            response.status(400).send(error);
+        }
+
+    },
+    async showtreino(request, response) {
         try {
             console.log('Acesso autorizado')
             const usuarios = await registroTreino.findAll();
@@ -84,16 +107,16 @@ module.exports = {
     }
 
 
-    // ,
-    // async create(request, response) {
-    //     try {
-    //         await Usuarios.create(request.body);
-    //         response.status(200).json("Usuário Cadastrado.");
-    //     } catch (error) {
-    //         console.log(error);
-    //         response.status(400).send(error);
-    //     }
-    // }
+    ,
+    async create(request, response) {
+        try {
+            await Usuarios.create(request.body);
+            response.status(200).json("Usuário Cadastrado.");
+        } catch (error) {
+            console.log(error);
+            response.status(400).send(error);
+        }
+    }
     //,
     // async one(request, response) {
     //     try {
