@@ -1,8 +1,9 @@
 const Usuarios = require("../models/usuarios");
 const registroTreino = require("../models/registroTreino")
-// const alunoPersonal = require('../models/alunoPersonal')
+const alunoPersonal = require('../models/alunoPersonal')
 
 const jwt = require("jsonwebtoken");
+const { use } = require("../routes/usuario_routes");
 const SECRET = 'secret'
 const blacklist = []
 
@@ -27,7 +28,7 @@ module.exports = {
                 return response.status(401).json("Falha na autenticação.");
             } else {
                 if (request.body.email == usuarios.email && request.body.senha == usuarios.senha) {
-                    const token = jwt.sign({ userId: usuarios.id }, SECRET, { expiresIn: 300 })
+                    const token = jwt.sign({ userId: usuarios.id, userTipo: usuarios.tipo }, SECRET, { expiresIn: 300 })
                     return response.json({ auth: true, token })
                 }
             }
@@ -123,7 +124,36 @@ module.exports = {
             console.log(error);
             response.status(400).send(error);
         }
+    },
+    async matricularAluno(request, response) {
+        const token = request.headers['x-access-token']
+        const decoded = jwt.verify(token, SECRET);
+        const tipo = decoded.userTipo
+        const user_id = decoded.userId
+        if (tipo == 'personal') {
+            const id = request.body.id;
+            const aluno = await Usuarios.findOne({ where: { id } });
+            console.log(aluno.tipo)
+            if (aluno.tipo == "aluno") {
+                try {
+                    await alunoPersonal.create({
+                        id_aluno: request.body.id,
+                        id_personal: user_id
+                    });
+                    response.status(200).json("Usuário matriculado como seu aluno.");
+                } catch (error) {
+                    console.log(error);
+                    response.status(400).send(error);
+                }
+            } else {
+                response.status(400).json("Você não pode cadastrar outro personal trainer como seu aluno")
+            }
+        }
+        else {
+            response.status(400).json("Só um personal trainer pode cadastrar um aluno")
+        }
     }
+
     // ,
     // async showtreino(request, response) {
     //     try {
