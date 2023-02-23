@@ -1,2 +1,14 @@
-# DesafioTreinow
-Código do desafio Treinow para vaga de estágio Node.js
+# Desafio Treinow
+## Código do desafio Treinow para vaga de estágio Node.js e Bancos Relacionais
+### Informações Técnicas
+<p>O código desse desafio foi feito utilizando as frameworks Express e Sequelize para o acesso e manipulação do banco de dados com Node.
+Para realizar o teste de requisições da API utilizei o software Insomnia. <br>
+Conforme pedido no desafio também fiz uso do JWT (Json Web Token) para a autenticação do usuário e login, e além das funcionalidades pedidas no desafio acrescentei mais algumas que achei necessário como o cadastro de usuário e personal trainer, além disso também implementei a função de logout, o que faz com que o usuário não possa acessar as rotas de novo a menos que faça login e se autentique novamente.</p>
+<p>A autenticação consiste em o JWT criar um token aonde são armazenadas informações do usuário de forma codificada, o sistema busca no header da requisição pelo x-access-token com as credenciais geradas, então na hora de testar, após autenticar o usuário só é preciso copiar o token gerado que é exibido na resposta da requisição e criar um header com o nome x-access-token, inserindo o código do token, após isso o usuário poderá ter acesso as outras rotas.
+Também é importante lembrar que configurei para que o token seja válido por 300 segundos após a autenticação, após isso será necessário fazer login novamente (Mas isso é apenas um detalhe e é facilmente configurável, eu apenas quis deixar assim pra mostrar que uma vez autenticado, caso passe muito tempo o usuário precisará fazer login novamente).</p>
+
+## Comentários sobre o desenvolvimento
+<p>Durante todo o processo de desenvolvimento desse código fiz uso dos recursos do Github, para cada funcionalidade nova eu criava uma branch que permite que mesmo que eu cometa um erro crítico isso não afete o código principal, e após implementada a solução eu fazia um merge na branch main, dessa forma protegendo o sistema de possíveis eventualidades, além disso eu optei por não apagar as outras branchs, deixando elas ainda disponiveis caso seja necessário revisar alguma parte especifica do processo de desenvolvimento.</p>
+<p>Acredito que a programação se baseia principalmente em resolver problemas, além de escrever código, portanto para mim a organização é crucial, além do bom uso de recursos como o Github que permitem que eu tenha um bom controle do fluxo de desenvolvimento. Inclusive é importante ressaltar que desde o início eu fiz uso do Github Projects, aonde é possível ter um controle maior do que está sendo feito.</p>
+<p>Por fim, foi uma ótima experiência, e independemente do resultado sou grato por essa oportunidade de testar os meus conhecimentos, pondo em prática aquilo que aprendi e que gosto de fazer, então finalizo esse README com um sincero muito obrigado, e fico a disposição.</p>
+
