@@ -2,9 +2,10 @@ const Usuarios = require("../models/usuarios");
 const registroTreino = require("../models/registroTreino")
 const alunoPersonal = require('../models/alunoPersonal')
 const avaliacaoPersonal = require('../models/avaliacaoPersonal')
+const cadastroTreino = require("../models/cadastroTreino");
 
 const jwt = require("jsonwebtoken");
-const { use } = require("../routes/usuario_routes");
+
 const SECRET = 'secret'
 const blacklist = []
 
@@ -202,6 +203,27 @@ module.exports = {
             }
         } else {
             response.status(400).json("Somente um aluno pode avaliar um personal.")
+        }
+    },
+    async cadastrarTreino(request, response) {
+        const token = request.headers['x-access-token']
+        const decoded = jwt.verify(token, SECRET);
+        const tipo = decoded.userTipo
+        const id = decoded.userId
+        if (tipo == 'personal') {
+            try {
+                await cadastroTreino.create({
+                    duracao: request.body.duracao,
+                    nome: request.body.nome,
+                    id_personal: id
+                });
+                response.status(200).json("Treino cadastrado com sucesso");
+            } catch (error) {
+                console.log(error);
+                response.status(400).send(error);
+            }
+        } else {
+            response.status(400).json("Somente um personal trainer pode cadastrar um treino.")
         }
     }
 

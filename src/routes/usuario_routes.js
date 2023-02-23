@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyJWT, autenticate, logout, storeWorkout, deleteAccount, cadastrarPersonal, cadastrarAluno, matricularAluno, avaliarPersonal } = require("../controllers/usuariosController");
+const { verifyJWT, autenticate, logout, storeWorkout, deleteAccount, cadastrarPersonal, cadastrarAluno, matricularAluno, avaliarPersonal, cadastrarTreino } = require("../controllers/usuariosController");
 const usuariosController = require("../controllers/usuariosController");
 
 const router = express.Router();
@@ -21,9 +21,11 @@ router.route('/register/student').post(cadastrarAluno)
 // Cadastrar personal trainer
 router.route('/register/personal').post(cadastrarPersonal)
 // Matricular usuário como aluno de um determinado personal
-router.route('/personal/student').post(matricularAluno)
+router.route('/personal/student').post(verifyJWT, matricularAluno)
 // Permitir que usuário avalie um personal
-router.route('/personal/:personal_id/rating').post(avaliarPersonal)
+router.route('/personal/:personal_id/rating').post(verifyJWT, avaliarPersonal)
+// Permitir que personal trainer cadastre treinos
+router.route('/personal/workout').post(cadastrarTreino)
 
 // router.route("/:id").get(usuariosController.one).put(usuariosController.update).delete(usuariosController.delete)
 
