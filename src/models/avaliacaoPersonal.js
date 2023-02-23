@@ -3,6 +3,8 @@ const sequelize = require("../config/database");
 
 class avaliacaoPersonal extends Model { }
 
+// Tabela responsável por armazenar as avaliações dos personais feitas pelos alunos
+
 avaliacaoPersonal.init(
     {
         id: {
@@ -10,7 +12,7 @@ avaliacaoPersonal.init(
             primaryKey: true,
             autoIncrement: true
         },
-        id_usuario: {
+        id_aluno: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'usuarios',
@@ -28,6 +30,10 @@ avaliacaoPersonal.init(
             },
             allowNull: false
         },
+        avaliacao: {
+            type: DataTypes.SMALLINT,
+            allowNull: false
+        }
     },
     {
         sequelize,

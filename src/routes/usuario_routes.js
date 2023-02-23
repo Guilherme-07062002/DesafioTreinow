@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyJWT, autenticate, logout, storeWorkout, deleteAccount, cadastrarPersonal, cadastrarAluno, matricularAluno } = require("../controllers/usuariosController");
+const { verifyJWT, autenticate, logout, storeWorkout, deleteAccount, cadastrarPersonal, cadastrarAluno, matricularAluno, avaliarPersonal } = require("../controllers/usuariosController");
 const usuariosController = require("../controllers/usuariosController");
 
 const router = express.Router();
@@ -20,8 +20,10 @@ router.route('/account/delete').get(verifyJWT, deleteAccount)
 router.route('/register/student').post(cadastrarAluno)
 // Cadastrar personal trainer
 router.route('/register/personal').post(cadastrarPersonal)
-// Método que cadastra um usuário como aluno de determinado personal
+// Matricular usuário como aluno de um determinado personal
 router.route('/personal/student').post(matricularAluno)
+// Permitir que usuário avalie um personal
+router.route('/personal/:personal_id/rating').post(avaliarPersonal)
 
 // router.route("/:id").get(usuariosController.one).put(usuariosController.update).delete(usuariosController.delete)
 
