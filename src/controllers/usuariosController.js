@@ -1,6 +1,6 @@
 const Usuarios = require("../models/usuarios");
 const registroTreino = require("../models/registroTreino")
-const sequelize = require("../config/database");
+// const alunoPersonal = require('../models/alunoPersonal')
 
 const jwt = require("jsonwebtoken");
 const SECRET = 'secret'
@@ -60,7 +60,7 @@ module.exports = {
             const decoded = jwt.verify(token, SECRET);
             const id_usuario = decoded.userId
             try {
-                await registroTreino.create({id_usuario: id_usuario});
+                await registroTreino.create({ id_usuario: id_usuario });
                 response.status(200).json("Treino registrado.");
             } catch (error) {
                 console.log(error);
@@ -87,7 +87,6 @@ module.exports = {
                     id: user_id
                 }
             })
-            
             response.status(200).json('Usuário deletado.')
         } catch (error) {
             console.log(error);
@@ -95,28 +94,47 @@ module.exports = {
         }
 
     },
-    async showtreino(request, response) {
+    async cadastrarAluno(request, response) {
         try {
-            console.log('Acesso autorizado')
-            const usuarios = await registroTreino.findAll();
-            response.status(200).json(usuarios);
+            await Usuarios.create({
+                nome: request.body.nome,
+                email: request.body.email,
+                documento: request.body.documento,
+                tipo: "aluno",
+                senha: request.body.senha
+            });
+            response.status(200).json("Aluno Cadastrado.");
+        } catch (error) {
+            console.log(error);
+            response.status(400).send(error);
+        }
+    },
+    async cadastrarPersonal(request, response) {
+        try {
+            await Usuarios.create({
+                nome: request.body.nome,
+                email: request.body.email,
+                documento: request.body.documento,
+                tipo: "personal",
+                senha: request.body.senha
+            });
+            response.status(200).json("Personal Trainer Cadastrado.");
         } catch (error) {
             console.log(error);
             response.status(400).send(error);
         }
     }
-
-
-    ,
-    async create(request, response) {
-        try {
-            await Usuarios.create(request.body);
-            response.status(200).json("Usuário Cadastrado.");
-        } catch (error) {
-            console.log(error);
-            response.status(400).send(error);
-        }
-    }
+    // ,
+    // async showtreino(request, response) {
+    //     try {
+    //         console.log('Acesso autorizado')
+    //         const usuarios = await registroTreino.findAll();
+    //         response.status(200).json(usuarios);
+    //     } catch (error) {
+    //         console.log(error);
+    //         response.status(400).send(error);
+    //     }
+    // }
     //,
     // async one(request, response) {
     //     try {
