@@ -225,6 +225,27 @@ module.exports = {
         } else {
             response.status(400).json("Somente um personal trainer pode cadastrar um treino.")
         }
+    },
+    async listarTreinos(request, response) {
+        const token = request.headers['x-access-token']
+        const decoded = jwt.verify(token, SECRET);
+        const tipo = decoded.userTipo
+        const id = decoded.userId
+        if (tipo == 'personal') {
+            try {
+                const treinos = await cadastroTreino.findAll({ where: { id_personal: id } })
+                if (treinos.length > 0) {
+                    response.status(200).json(treinos)
+                } else if (treinos.length == 0) {
+                    response.status(200).json('Você ainda não cadastrou nenhum treino.')
+                }
+            } catch (error) {
+                console.log(error);
+                response.status(400).send(error);
+            }
+        } else {
+            response.status(400).json("Somente um personal trainer pode visualizar os treinos cadastrados.")
+        }
     }
 
     // ,
